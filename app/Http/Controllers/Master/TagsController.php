@@ -89,12 +89,14 @@ class TagsController extends Controller
                 $request->validate([
                     'tag' => 'required|string',
                     'keterangan' => 'required|string',
+                    'label' => 'required|string',
                     'status_id' => 'required',
                 ]);
 
                 $tag->name = _escape($request->string('tag'));
                 $tag->description = _escape($request->string('keterangan'));
                 $tag->status = _escape($request->string('status_id'));
+                $tag->label = _escape($request->string('label'));
                 $tag->updated_at = now();
                 $tag->updated_from = 'Back Office';
                 $tag->updated_by = Auth::user()->id;
@@ -102,13 +104,14 @@ class TagsController extends Controller
             } else {
                 $request->validate([
                     'tag' => 'required|string',
+                    'label' => 'required|string',
                     'keterangan' => 'required|string',
 
                 ]);
                 $data['name'] = _escape($request->string('tag'));
                 $data['description'] = _escape($request->string('keterangan'));
-                $lastSort = Tags::max('sort');
-                $data['sort'] = $lastSort + 1;
+                $data['sort'] = Tags::max('sort') + 1;
+                $data['label'] = _escape($request->string('label'));
                 $data['status'] = 1;
                 $data['created_from'] = 'Back Office';
                 $data['created_by'] = Auth::user()->id;

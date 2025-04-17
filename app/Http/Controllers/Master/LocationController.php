@@ -95,6 +95,7 @@ class LocationController extends Controller
 
                 $location->name = _escape($request->string('location'));
                 $location->description = _escape($request->string('keterangan'));
+                $location->label = _escape($request->string('label'));
                 $location->status = _escape($request->string('status_id'));
                 $location->updated_at = now();
                 $location->updated_from = 'Back Office';

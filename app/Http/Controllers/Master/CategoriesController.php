@@ -101,6 +101,7 @@ class CategoriesController extends Controller
                     'unit_kerja_ids' => 'required|array',
                     'penugasan_ids' => 'required|array',
                     'keterangan' => 'required|string',
+                    'label' => 'required|string',
                     'status_id' => 'required',
                 ]);
                 $categori->name = _escape($request->string('kategori'));
@@ -113,6 +114,7 @@ class CategoriesController extends Controller
                 $categori->penugasan_ids = implode(',', array_map('htmlspecialchars', $request->input('penugasan_ids', [])));
                 $categori->description = _escape($request->string('keterangan'));
                 $categori->status = (int) $request->input('status_id');
+                $categori->label = _escape($request->string('label'));
                 $categori->updated_at = now();
                 $categori->updated_from = 'Back Office';
                 $categori->updated_by = Auth::id();
@@ -123,6 +125,7 @@ class CategoriesController extends Controller
                     'gambar' => 'required|file|mimes:jpg,jpeg,png|max:2048',
                     'unit_kerja_ids' => 'required|array',
                     'penugasan_ids' => 'required|array',
+                    'label' => 'required|string',
                     'keterangan' => 'required|string',
                 ]);
                 $data = [];
@@ -135,6 +138,7 @@ class CategoriesController extends Controller
                 $data['unit_kerja_ids'] = implode(',', array_map('htmlspecialchars', $request->input('unit_kerja_ids', [])));
                 $data['penugasan_ids'] = implode(',', array_map('htmlspecialchars', $request->input('penugasan_ids', [])));
                 $data['description'] = _escape($request->string('keterangan'));
+                $data['label'] = _escape($request->string('label'));
                 $data['sort'] = Categories::max('sort') + 1;
                 $data['status'] = 1;
                 $data['created_from'] = 'Back Office';

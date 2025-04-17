@@ -26,19 +26,26 @@
                                 id="input_name" value="{{ $row->name ?? '' }}" placeholder="Lokasi" required />
                         </div>
                         <div class="fv-row mb-7">
-    <label class="required fw-bold fs-6 mb-2" for="input_label">Label</label>
-    <select class="form-select form-select-solid mb-3 mb-lg-0" name="label" id="input_label"
-        data-control="select2" data-placeholder="Select an option" required>
-        <option value="">Select an option</option>
-        <option value="primary" class="text-primary" {{ ($row->label ?? '') == 'primary' ? 'selected' : '' }}>Biru</option>
-        <option value="success" class="text-success" {{ ($row->label ?? '') == 'success' ? 'selected' : '' }}>Hijau</option>
-        <option value="danger" class="text-danger" {{ ($row->label ?? '') == 'danger' ? 'selected' : '' }}>Merah</option>
-        <option value="warning" class="text-warning" {{ ($row->label ?? '') == 'warning' ? 'selected' : '' }}>Kuning</option>
-        <option value="info" class="text-info" {{ ($row->label ?? '') == 'info' ? 'selected' : '' }}>Biru Muda</option>
-        <option value="secondary" class="text-secondary" {{ ($row->label ?? '') == 'secondary' ? 'selected' : '' }}>Abu-abu</option>
-        <option value="dark" class="text-dark" {{ ($row->label ?? '') == 'dark' ? 'selected' : '' }}>Hitam</option>
-    </select>
-</div>
+                            <label class="required fw-bold fs-6 mb-2" for="input_label">Label</label>
+                            <select class="form-select form-select-solid mb-3 mb-lg-0" name="label" id="input_label"
+                                data-control="select2" data-placeholder="Select an option" required>
+                                <option value="">Select an option</option>
+                                <option value="primary" class="text-primary"
+                                    {{ ($row->label ?? '') == 'primary' ? 'selected' : '' }}>Biru</option>
+                                <option value="success" class="text-success"
+                                    {{ ($row->label ?? '') == 'success' ? 'selected' : '' }}>Hijau</option>
+                                <option value="danger" class="text-danger"
+                                    {{ ($row->label ?? '') == 'danger' ? 'selected' : '' }}>Merah</option>
+                                <option value="warning" class="text-warning"
+                                    {{ ($row->label ?? '') == 'warning' ? 'selected' : '' }}>Kuning</option>
+                                <option value="info" class="text-info"
+                                    {{ ($row->label ?? '') == 'info' ? 'selected' : '' }}>Biru Muda</option>
+                                <option value="secondary" class="text-secondary"
+                                    {{ ($row->label ?? '') == 'secondary' ? 'selected' : '' }}>Abu-abu</option>
+                                <option value="dark" class="text-dark"
+                                    {{ ($row->label ?? '') == 'dark' ? 'selected' : '' }}>Hitam</option>
+                            </select>
+                        </div>
 
                         <div class="fv-row mb-7">
                             <label class="required fw-bold fs-6 mb-2" id="input_username">keterangan</label>
