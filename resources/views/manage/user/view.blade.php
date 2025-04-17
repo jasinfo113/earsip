@@ -10,6 +10,7 @@
                             <i class="fa fa-trash p-0"></i>
                         </a>
                         @endif
+
                         @if (config('app.user_access.create', 0) == 1)
                         <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-primary" onclick="openForm('manage/user/form')" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" title="Tambah data">
                             <i class="fa fa-plus p-0"></i>

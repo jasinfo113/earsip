@@ -3,30 +3,28 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\Master\Categories;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\Master\Tags;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Calculation\Category;
-use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\DataTables;
 
-class CategoriesController extends Controller
+class TagsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('master.categories.view');
+        return view('master.tags.view');
     }
 
-    public function categori_data(Request $request)
+    public function tag_data(Request $request)
     {
         if ($request->ajax()) {
             $where = "is_deleted = 0";
-            $query = DB::connection("default")->table("m_category")->whereRaw($where)
+            $query = DB::connection("default")->table("m_tag")->whereRaw($where)
                 ->when($request->input('search'), function (QueryBuilder $query, string $search) {
                     if ($search) {
                         $query->whereAny([
@@ -47,9 +45,9 @@ class CategoriesController extends Controller
                     return $html;
                 })
                 ->addColumn('action', function ($row) {
-                    $html = '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'master/categories/detail\',\'id=' . $row->id . '\')" title="Detail"><i class="fa fa-th-list"></i></a>';
+                    $html = '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'master/tags/detail\',\'id=' . $row->id . '\')" title="Detail"><i class="fa fa-th-list"></i></a>';
                     if (config('app.user_access.update', 0) == 1) {
-                        $html .= ' <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'master/categories/form\',\'id=' . $row->id . '\')" title="Update"><i class="fa fa-edit"></i></a>';
+                        $html .= ' <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'master/tags/form\',\'id=' . $row->id . '\')" title="Update"><i class="fa fa-edit"></i></a>';
                     }
                     return $html;
                 })
@@ -57,14 +55,8 @@ class CategoriesController extends Controller
                     $html = '<span class="badge badge-' . ($row->status == 1 ? "success" : "danger") . '">' . ($row->status == 1 ? "Aktif" : "Tidak Aktif") . '</span>';
                     return $html;
                 })
-                ->addColumn('image', function ($row) {
-                    $image = $row->image
-                        ? _diskPathUrl('uploads', 'master/categori/' . $row->image, asset('assets/images/noimage.png'))
-                        : asset('assets/images/noimage.png');
 
-                    return '<img src="' . $image . '" width="32" height="32" class="rounded" />';
-                })
-                ->rawColumns(['checkbox', 'action', 'status', 'image'])
+                ->rawColumns(['checkbox', 'action', 'status'])
                 ->toJson();
         }
     }
@@ -72,21 +64,20 @@ class CategoriesController extends Controller
     public function form(Request $request)
     {
         if ($request->id) {
-            $row = DB::table('m_category')->find($request->id);
+            $row = DB::table('m_tag')->find($request->id);
             if (!$row) {
                 abort(400);
             }
-            $data["title"] = "Ubah Kategori";
+            $data["title"] = "Ubah Tag";
             $data["row"] = $row;
             $data["status"] = collect([
                 ["id" => 1, "name" => "Active"],
                 ["id" => 2, "name" => "Non Active"]
             ]);
-            $data["logo"] = _diskPathUrl('uploads', 'master/categori/' . $row->image, asset('assets/images/noimage.png'));
         } else {
-            $data["title"] = "Tambah Kategori";
+            $data["title"] = "Tambah Tag";
         }
-        return view('master.categories.form', $data);
+        return view('master.tags.form', $data);
     }
 
     public function save(Request $request)
@@ -94,52 +85,34 @@ class CategoriesController extends Controller
         //dd($request->all());
         try {
             if ($request->has('id')) {
-                $categori = Categories::findOrFail($request->id);
+                $tag = Tags::findOrFail($request->id);
                 $request->validate([
-                    'kategori' => 'required|string',
-                    'gambar' => $request->hasFile('gambar') ? 'required|file|mimes:jpg,jpeg,png|max:2048' : '',
-                    'unit_kerja_ids' => 'required|array',
-                    'penugasan_ids' => 'required|array',
+                    'tag' => 'required|string',
                     'keterangan' => 'required|string',
                     'status_id' => 'required',
                 ]);
-                $categori->name = _escape($request->string('kategori'));
-                if ($request->hasFile('gambar')) {
-                    $gambarBaru = $request->file('gambar')->hashName();
-                    $request->file('gambar')->storeAs('public/master/categori', $gambarBaru);
-                    $categori->image = $gambarBaru;
-                }
-                $categori->unit_kerja_ids = implode(',', array_map('htmlspecialchars', $request->input('unit_kerja_ids', [])));
-                $categori->penugasan_ids = implode(',', array_map('htmlspecialchars', $request->input('penugasan_ids', [])));
-                $categori->description = _escape($request->string('keterangan'));
-                $categori->status = (int) $request->input('status_id');
-                $categori->updated_at = now();
-                $categori->updated_from = 'Back Office';
-                $categori->updated_by = Auth::id();
-                $categori->save();
+
+                $tag->name = _escape($request->string('tag'));
+                $tag->description = _escape($request->string('keterangan'));
+                $tag->status = _escape($request->string('status_id'));
+                $tag->updated_at = now();
+                $tag->updated_from = 'Back Office';
+                $tag->updated_by = Auth::user()->id;
+                $tag->save();
             } else {
                 $request->validate([
-                    'kategori' => 'required|string',
-                    'gambar' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-                    'unit_kerja_ids' => 'required|array',
-                    'penugasan_ids' => 'required|array',
+                    'tag' => 'required|string',
                     'keterangan' => 'required|string',
+
                 ]);
-                $data = [];
-                $data['name'] = _escape($request->string('kategori'));
-                if ($request->hasFile('gambar')) {
-                    $gambarBaru = $request->file('gambar')->hashName();
-                    $request->file('gambar')->storeAs('public/master/categori', $gambarBaru);
-                    $data['image'] = $gambarBaru;
-                }
-                $data['unit_kerja_ids'] = implode(',', array_map('htmlspecialchars', $request->input('unit_kerja_ids', [])));
-                $data['penugasan_ids'] = implode(',', array_map('htmlspecialchars', $request->input('penugasan_ids', [])));
+                $data['name'] = _escape($request->string('tag'));
                 $data['description'] = _escape($request->string('keterangan'));
-                $data['sort'] = Categories::max('sort') + 1;
+                $lastSort = Tags::max('sort');
+                $data['sort'] = $lastSort + 1;
                 $data['status'] = 1;
                 $data['created_from'] = 'Back Office';
-                $data['created_by'] = Auth::id();
-                Categories::create($data);
+                $data['created_by'] = Auth::user()->id;
+                Tags::create($data);
             }
             return response()->json([
                 'status' => TRUE,
@@ -167,7 +140,7 @@ class CategoriesController extends Controller
                     'message' => __('response.no_process'),
                 ]);
             }
-            $query = Categories::whereIn('id', explode(",", $request->id));
+            $query = Tags::whereIn('id', explode(",", $request->id));
             $rows = $query->get();
             if (!$rows->count()) {
                 abort(400);
@@ -204,32 +177,14 @@ class CategoriesController extends Controller
         if (!$request->id) {
             abort(400);
         }
-        $row = Categories::find($request->id);
+        $row = Tags::find($request->id);
         if (!$row) {
             abort(400);
         }
 
-        $id_unitkerja = explode(',', $row->unit_kerja_ids);
-        $id_penugasan = explode(',', $row->penugasan_ids);
-        $data["penugasan"] = _getData(
-            "central",
-            "m_pegawai_penugasan",
-            "id_penugasan AS id, nama_penugasan AS `name`",
-            "is_deleted = 0 AND id_penugasan IN (" . implode(',', $id_penugasan) . ")",
-            "`name` ASC"
-        );
-        $data["unit_kerja"] = _getData(
-            "central",
-            "m_pegawai_unit_kerja",
-            "id_unit_kerja AS id, nama_unit_kerja AS `name`",
-            "is_deleted = 0 AND id_unit_kerja IN (" . implode(',', $id_unitkerja) . ")",
-            "`name` ASC"
-        );
-
-        $data["title"] = "Detail Kategori";
+        $data["title"] = "Detail Tag";
         $data["row"] = $row;
-        $data["logo"] = _diskPathUrl('uploads', 'master/categori/' . $row->image, asset('assets/images/noimage.png'));
-        return view('master.categories.detail', $data);
+        return view('master.tags.detail', $data);
     }
 
     /**

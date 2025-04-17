@@ -363,8 +363,8 @@ function setSummerNote(_el, _simple = false, _height = 500) {
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['height', ['height']],
                     ['table', ['table']],
-                    ['insert', ['hr']],//'image', 'link', 'video', 
-                    ['view', ['codeview']] //'fullscreen', 
+                    ['insert', ['hr']],//'image', 'link', 'video',
+                    ['view', ['codeview']] //'fullscreen',
                 ],
             popover: {
                 image: [
@@ -456,11 +456,18 @@ function openForm(_url, _params = "") {
                 docBlur();
                 if ($("body").hasClass("modal-open")) {
                     $("#form_dialog_detail").html(data);
-                    $("#form_dialog_detail").modal("show");
+                   // $("#form_dialog_detail").modal("show");
+                    setTimeout(() => {
+            $("#form_dialog_detail").modal("show");
+        }, 100);
                 } else {
                     $("#form_dialog").html(data);
-                    $("#form_dialog").modal("show");
+                    //$("#form_dialog").modal("show");
+                    setTimeout(() => {
+            $("#form_dialog").modal("show");
+        }, 100);
                 }
+
             },
             complete: function () {
                 loading_close();
@@ -1042,6 +1049,8 @@ function setAjaxSelections(_el, _url, _params = null, _selected = false) {
             placeholder: (_select.data("placeholder") ? _select.data("placeholder") : "Select an option"),
             allowClear: !isMultiple,
             dropdownParent: ($(document.body).hasClass("modal-open") ? "#" + $(_el).parents(".modal").attr("id") : null),
+            // dropdownParent: ($(_el).closest('.modal').length ? $(_el).closest('.modal') : $(document.body)),
+
             closeOnSelect: !isMultiple,
             minimumInputLength: 0,
             ajax: {
@@ -1181,11 +1190,14 @@ function saveData(_url, _params, _callback = false, _modal = false) {
 function saveFormData(_form, _url, _callback = false, _loader = false, _modal = false) {
     if (_form && _url && fieldValidate(_form)) {
         var string = $(_form).serialize();
+        //var string = new FormData(_form);
         $.ajax({
             type: "POST",
             url: site_url + _url,
             data: string,
             cache: false,
+            //contentType: false,
+           // processData: false,
             dataType: "json",
             beforeSend: function () {
                 if (_loader) {
@@ -1286,6 +1298,67 @@ function submitData(_event, _url, _callback = false, _loader = false, _modal = f
         });
     }
 }
+
+// function submitData(_event, _url, _callback = false, _loader = false, _modal = false) {
+//     _event.preventDefault(); // Mencegah reload form saat submit
+
+//     let _form = $(_event.target);
+//     //var _form = "#" + $(_event).attr('id');
+//     if (fieldValidate(_form)) {
+//         //let formData = new FormData(_event);
+//         let formData = new FormData(_form[0]);
+//         $.ajax({
+//             type: "POST",
+//             url: site_url + _url,
+//             data: formData,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             dataType: "json",
+//             beforeSend: function () {
+//                 if (_loader) {
+//                     loaderBefore($(_form).find(".btn-submit"));
+//                 } else {
+//                     swalLoading();
+//                 }
+//             },
+//             success: function (json) {
+//                 if (json.status) {
+//                     Swal.fire({
+//                         icon: "success",
+//                         html: json.message,
+//                         confirmButtonText: "OK",
+//                         customClass: {
+//                             confirmButton: "btn btn-primary"
+//                         }
+//                     }).then((function (e) {
+//                         if (e.isConfirmed) {
+//                             if (_modal) {
+//                                 closeModal();
+//                             }
+//                             if (typeof _callback === "function") {
+//                     _callback(json);
+
+//                             } else if (json.url) {
+//                                 location.replace(json.url);
+//                             }
+//                         }
+//                     }));
+//                 } else {
+//                     swalAlert("error", json.message);
+//                 }
+//             },
+//             complete: function () {
+//                 if (_loader) {
+//                     loaderAfter($(_form).find(".btn-submit"));
+//                 }
+//             },
+//             error: function (xhr, status, error) {
+//                 swalAlert("error", error);
+//             }
+//         });
+//     }
+// }
 
 function delTable(_url, _callback, _el = '#form_query #table_data', _text = 'Hapus data terpilih?') {
     if (_url && _callback) {

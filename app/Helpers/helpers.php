@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 if (!function_exists('_createdBy')) {
-    function _createdBy($source, $user) 
+    function _createdBy($source, $user)
     {
         $createdfrom = $source ?? 'Back Office';
         $createdby = $user ?? -1;
@@ -535,8 +535,8 @@ if (!function_exists('html_escape')) {
 
 if (!function_exists('lat_lng_distance')) {
     /**
-     * Calculates the distance between two points, given their 
-     * latitude and longitude, and returns an array of values 
+     * Calculates the distance between two points, given their
+     * latitude and longitude, and returns an array of values
      * of the most common distance units
      *
      * @param  {coord} $lat1 Latitude of the first point
@@ -588,10 +588,10 @@ if (!function_exists('_tableExist')) {
     {
         if (isset($db) and isset($table)) {
             $query = DB::connection($conn)
-                ->select("SELECT 
-                            TABLE_NAME AS `data` 
-                        FROM INFORMATION_SCHEMA.TABLES 
-                        WHERE TABLE_SCHEMA = '" . $db . "' 
+                ->select("SELECT
+                            TABLE_NAME AS `data`
+                        FROM INFORMATION_SCHEMA.TABLES
+                        WHERE TABLE_SCHEMA = '" . $db . "'
                         AND TABLE_NAME = '" . $table . "'");
             if (COUNT($query)) {
                 return true;

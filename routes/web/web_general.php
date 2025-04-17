@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Common\GeneralController;
+use App\Http\Controllers\Report\ReportController;
 use Illuminate\Http\Request;
 
 Route::middleware('auth')->group(function () {

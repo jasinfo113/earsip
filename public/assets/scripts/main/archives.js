@@ -9,7 +9,7 @@ $(document).ready(function () {
     });
     // setSelections("#form_query select.select-role", "general/selection", "ref=user_roles");
     // setSelections("#form_query select.select-status", "general/selection", "ref=user_status");
-    dataCategori();
+    dataArchives();
 });
 
 function showData() {
@@ -17,11 +17,11 @@ function showData() {
     if (table) {
         table.destroy();
     }
-    dataCategori();
+    dataArchives();
 
 }
 
-function dataCategori() {
+function dataArchives() {
     var string = $('#form_query').serializeObject();
      table = $('#form_query #table_data').DataTable({
         dom: '<"top"i>rt<"bottom"lp><"clear">',
@@ -30,7 +30,7 @@ function dataCategori() {
             type: 'POST',
             data: string,
             cache: false,
-            url: site_url + 'master/categories/data'
+            url: site_url + 'main/archives/data'
         },
         columns: [
             {data: 'checkbox', className: 'row-checkbox' + (U_DLT ? '' : 'd-none'), width: '40px', orderable: false}, //checkbox
@@ -38,7 +38,6 @@ function dataCategori() {
             {data: 'DT_RowIndex', name: 'no', className: 'text-start hide-hp', width: '40px', orderable: false}, //number
             { data: 'name', name: 'name', className: 'text-start' },
             { data: 'description', name: 'description', className: 'text-start' },
-            { data: 'image', className: 'text-center' },
             { data: 'status', name: 'status', className: 'text-center' },
         ],
         order: [[3, 'asc']],

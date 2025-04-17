@@ -169,13 +169,11 @@
             e.preventDefault();
             saveFormData("#form_data", "manage/user/save", showData, true, true);
         });
-        $("#form_data input").keydown(function(e) {
+       $("#form_data input").keydown(function (e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
             if (keycode === 13) {
                 e.preventDefault();
-                if (_pass.getScore() >= _passMin) {
-                    $("#form_data .btn-submit").trigger("click");
-                }
+                $("#form_data .btn-submit").trigger("click");
             }
         });
         @isset($row->ref)
@@ -194,4 +192,4 @@
             setAjaxSelections("#form_data select[id=input_pegawai]", "general/selection", "ref=pegawai");
         @endif
     });
-</script> 
+</script>

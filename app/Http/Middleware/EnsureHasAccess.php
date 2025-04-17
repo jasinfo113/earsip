@@ -55,7 +55,7 @@ class EnsureHasAccess
             }
             $scope = Route::currentRouteName() ?? -1;
             $access = _userAccessByScope($scope, $user->role_id);
-            //dd($user->role_id);
+            //dd($access);
             if (!($access->read ?? 0)) {
                 abort(403);
             }

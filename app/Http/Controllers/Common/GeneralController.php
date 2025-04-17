@@ -29,6 +29,8 @@ class GeneralController extends Controller
             $items = $this->_refActions($request);
         } else if ($ref == 'jenis_pegawai') {
             $items = _getData("central", "m_pegawai_jenis", "id_jenis_pegawai AS id, nama_jenis_pegawai AS `name`", "is_deleted = 0", "`name` ASC");
+        } else if ($ref == 'penugasan') {
+            $items = _getData("central", "m_pegawai_penugasan", "id_penugasan AS id, nama_penugasan AS `name`", "is_deleted = 0", "`name` ASC");
         } else if (in_array($ref, ["jabatan", "penugasan", "penempatan", "unit_kerja", "unit_kerja_sub"])) {
             $table = $ref;
             if ($ref == "unit_kerja_sub") {

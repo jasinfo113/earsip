@@ -546,6 +546,7 @@ function form_dialog_detail(str, id) {
 }
 
 function open_dialog(_get, _store, _form, _title, id) {
+    console.log(_get, _store, _form, _title, id);
     var string = "";
     if (id) {
         string = 'id=' + id;
@@ -577,6 +578,7 @@ function open_dialog(_get, _store, _form, _title, id) {
                             closeModal();
                             toastSuccess(proceed.message);
                         } else {
+                            console.log(proceed);
                             toastError(proceed.message);
                         }
                     }
