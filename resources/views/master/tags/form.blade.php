@@ -84,7 +84,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
+        setSelect2("#form_data select[data-control=select2]");
         $("#form_data").submit(function(e) {
             e.preventDefault();
             submitData(this, "master/tags/save", showData, true, true);

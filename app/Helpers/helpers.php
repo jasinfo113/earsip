@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Main\Archives;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -690,5 +691,33 @@ if (!function_exists('_historyTableData')) {
             ->rawColumns(['user'])
             ->removeColumn(['name', 'created_from', 'created_by'])
             ->toJson();
+    }
+
+    if (!function_exists('generateNomorArsip')) {
+        function generateNomorArsip(): string
+        {
+            $datePart = now()->format('ymd');
+
+            $lastArsip = Archives::where('number', 'like', "ARSIP$datePart%")
+                ->orderByDesc('number')
+                ->first();
+
+            if ($lastArsip) {
+                $lastNumber = (int)substr($lastArsip->number, -3);
+            } else {
+                $lastNumber = 0;
+            }
+
+            $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+
+            return "ARSIP$datePart$nextNumber";
+        }
+    }
+
+    if (!function_exists('generateKodeAcak')) {
+        function generateKodeAcak(): string
+        {
+            return strtoupper('ARC-' . strtoupper(Str::random(6)));
+        }
     }
 }

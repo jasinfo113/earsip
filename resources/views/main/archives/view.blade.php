@@ -8,12 +8,12 @@
                 <div class="card-toolbar">
                     <div class="d-flex gap-2 justify-content-end" data-kt-user-table-toolbar="base">
                         @if (config('app.user_access.delete', 0) == 1)
-                        <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-danger" onclick="delTable('master/categories/del', showData)" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" title="Hapus data">
+                        <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-danger" onclick="delTable('main/archives/del', showData)" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" title="Hapus data">
                             <i class="fa fa-trash p-0"></i>
                         </a>
                         @endif
                         @if (config('app.user_access.create', 0) == 1)
-                        <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-primary" onclick="openForm('master/categories/form')" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" title="Tambah data">
+                        <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-primary" onclick="openForm('main/archives/form')" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right" title="Tambah data">
                             <i class="fa fa-plus p-0"></i>
                         </a>
                         @endif
@@ -47,8 +47,12 @@
                                 </th>
                                     <th class="w-80px mw-80px min-w-80px">#</th>
                                 <th class="text-start w-40px mw-40px min-w-40px">No</th>
-                                    <th class="text-start">Kategori</th>
-                                    <th class="text-start">Keterangan</th>
+                                    <th class="text-start">Nomor Arsip</th>
+                                    <th class="text-start">Referensi Nomor Arsip</th>
+                                    <th class="text-start">Tanggal Arsip</th>
+                                    <th class="text-start">Nama Arsip</th>
+                                    <th class="text-start">Keterangan Arsip</th>
+                                    <th class="text-start">Catatan Arsip</th>
                                     <th class="text-center w-80px">Status</th>
                                 </tr>
                             </thead>

@@ -2,8 +2,10 @@
 
 namespace App\Models\Main;
 
+use App\Models\Master\Categories;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use phpDocumentor\Reflection\Location;
 
 class Archives extends Model
 {
@@ -14,12 +16,11 @@ class Archives extends Model
     protected $fillable = [
         'code',
         'number',
+        'ref_number',
         'date',
         'title',
         'description',
-        'type',
-        'unit_kerja_id',
-        'penugasan_id',
+        'note',
         'category_id',
         'tag_ids',
         'location_id',
@@ -47,4 +48,9 @@ class Archives extends Model
         'deleted_from',
         'deleted_by',
     ];
+
+    public function document_files()
+    {
+        return $this->hasMany(Document_file::class, 'document_id');
+    }
 }

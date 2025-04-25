@@ -27,6 +27,12 @@ class GeneralController extends Controller
             $items = $this->_general(['table' => 'm_references', 'columns' => "ref AS id, UCASE(REPLACE(ref, '_', ' ')) AS name", 'group' => 'ref', 'order' => 'name ASC'], $request);
         } else if ($ref == 'action' && $request->filled('key')) {
             $items = $this->_refActions($request);
+        } else if ($ref == 'category') {
+            $items = _getData("default", "m_category", "id,`name`", "is_deleted = 0 and status=1", "`name` ASC");
+        } else if ($ref == 'tags') {
+            $items = _getData("default", "m_tag", "id,`name`", "is_deleted = 0 and status=1", "`name` ASC");
+        } else if ($ref == 'lokasi') {
+            $items = _getData("default", "m_location", "id,`name`", "is_deleted = 0 and status=1", "`name` ASC");
         } else if ($ref == 'jenis_pegawai') {
             $items = _getData("central", "m_pegawai_jenis", "id_jenis_pegawai AS id, nama_jenis_pegawai AS `name`", "is_deleted = 0", "`name` ASC");
         } else if ($ref == 'penugasan') {
