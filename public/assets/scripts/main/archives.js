@@ -77,7 +77,7 @@ function dataArchives() {
 
 function downloadFile(id) {
     // Gantilah ':id' dengan ID dokumen
-    const url = "/main/archives/export/" + id; // URL statis
+    const url = site_url + "main/archives/export/" + id; // URL statis
 
     // Arahkan browser ke URL untuk mengunduh
     window.location.href = url;
