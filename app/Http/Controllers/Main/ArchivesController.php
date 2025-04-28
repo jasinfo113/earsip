@@ -260,7 +260,6 @@ class ArchivesController extends Controller
         $data["document_id"] = $request->document_id;
         $data["title"] = "Pembubuhan";
         $data["row"] = null;
-
         return view('main.archives.pembubuhan', $data);
     }
 
