@@ -27,18 +27,24 @@ class ArchivesController extends Controller
     public function archives_data(Request $request)
     {
         if ($request->ajax()) {
-            $where = "is_deleted = 0";
-            $query = DB::connection("default")->table("document")->whereRaw($where)
+            $where = "document.is_deleted = 0";
+
+            $query = DB::connection("default")
+                ->table("document")
+                ->select("document.id as id", "document.code as code", "document.number as number", "document.ref_number as ref_number", "document.date as date", "document.title as title", "document.description as description", "document.note as note", "document.category_id as category_id", "document.tag_ids as tag_ids", "document.location_id as location_id", "document.status_id as status_id", "document_file.name as name", "document_file.hasil_pdf as hasil_pdf")
+                ->join("document_file", "document.id", "=", "document_file.document_id")
+                ->whereRaw($where)
                 ->when($request->input('search'), function (Builder $query, string $search) {
                     if ($search) {
-                        $query->whereAny([
-                        'title',
-                        'number',
-                        'date',
-                        'description',
-                        ], 'LIKE', "%" . $search . "%");
+                    $query->where(function ($q) use ($search) {
+                        $q->where('document.title', 'LIKE', "%{$search}%")
+                            ->orWhere('document.number', 'LIKE', "%{$search}%")
+                            ->orWhere('document.date', 'LIKE', "%{$search}%")
+                            ->orWhere('document.description', 'LIKE', "%{$search}%");
+                    });
                     }
                 });
+
             $data = $query->get();
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -51,11 +57,28 @@ class ArchivesController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                 $html = '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'main/archives/detail\',\'id=' . $row->id . '\')" title="Detail"><i class="fa fa-th-list"></i></a>';
-                    if (config('app.user_access.update', 0) == 1) {
+
+                $data = [
+                    'nama_file' => asset('uploads/main/arsip/' . $row->name),
+                    'code' => $row->code,
+                    'document_id' => $row->id,
+                    '_token' => csrf_token(),
+                ];
+
+                // encode ke JSON, lalu amanin kutipnya
+                $jsonData = htmlspecialchars(json_encode($data), ENT_QUOTES, 'UTF-8');
+
+                $html .= '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'main/archives/pembubuhan\', ' . $jsonData . ')" title="Pembubuhan"><i class="fas fa-clone"></i></a>';
+                if (config('app.user_access.export', 0) == 1 && $row->hasil_pdf) {
+                    $html .= ' <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="downloadFile(' . $row->id . ')" title="Export"><i class="fa fa-download"></i></a>';
+                }
+                if (config('app.user_access.update', 0) == 1) {
                     $html .= ' <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'main/archives/form\',\'id=' . $row->id . '\')" title="Update"><i class="fa fa-edit"></i></a>';
                     }
-                    return $html;
+
+                return $html;
                 })
+
                 ->editColumn('status', function ($row) {
                 $html = '<span class="badge badge-' . ($row->status_id == 1 ? "success" : "danger") . '">' . ($row->status_id == 1 ? "Aktif" : "Tidak Aktif") . '</span>';
                     return $html;
@@ -128,6 +151,16 @@ class ArchivesController extends Controller
                         'created_from'  => 'Back Office',
                         'created_by'    => Auth::id(),
                     ]);
+
+                    $modalStatus = 'modal';
+                    $fullUrl = asset('uploads/main/arsip/' . $namaFilePdf);
+                    $code = $arsip->code;
+                    $document_id = $arsip->id;
+                } else {
+                    $modalStatus = '';
+                    $fullUrl = '';
+                    $code = '';
+                    $document_id = '';
                 }
 
                 Document_history::create([
@@ -194,15 +227,17 @@ class ArchivesController extends Controller
                     'created_from'  => 'Back Office',
                     'created_by'    => Auth::id(),
                 ]);
+                $modalStatus = 'modal';
             }
 
             return response()->json([
                 'status' => TRUE,
                 'message' => __(($request->id ? 'response.data_updated' : 'response.data_added')),
-                'modal' => 'modal',
+                'modal' => $modalStatus,
                 'data' => array(
                     'nama_file' => $fullUrl,
                     'code' => $code,
+                    'document_id' => $document_id,
                 ),
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -222,6 +257,7 @@ class ArchivesController extends Controller
     {
         $data["nama_file"] = $request->nama_file;
         $data["code"] = $request->code;
+        $data["document_id"] = $request->document_id;
         $data["title"] = "Pembubuhan";
         $data["row"] = null;
 
@@ -243,14 +279,6 @@ class ArchivesController extends Controller
                 abort(400);
             }
             $user_id = Auth::user()->id;
-            foreach ($rows as $row) {
-                if ($row->id == $user_id) {
-                    return response()->json([
-                        'status' => FALSE,
-                        'message' => __('response.failed_request'),
-                    ]);
-                }
-            }
             $query->update([
                 'is_deleted' => 1,
                 'deleted_at' => now(),
@@ -313,6 +341,67 @@ class ArchivesController extends Controller
         $data["row"] = $row;
         return view('main.archives.detail', $data);
     }
+
+    public function savePdfToServer(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $code = $request->input('id');
+            $document_id = $request->input('document_id');
+            $filename = 'arsip_' . time() . '.pdf';
+            $path = $file->storeAs('public/main/arsip', $filename);
+            $query = Document_file::where('document_id', $document_id);
+            $query->update([
+                'hasil_pdf' => $filename,
+                'updated_from'  => 'Back Office',
+                'updated_by'    => Auth::id(),
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'File Berhasil Disimpan.',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal Menyimpan File.',
+            ], 400);
+        }
+    }
+
+    public function export($id)
+    {
+        // Mencari file berdasarkan ID dokumen
+        $file = DB::table('document_file')
+            ->where('document_id', $id)
+            ->first();
+
+        if (!$file) {
+            return response()->json([
+                'status' => false,
+                'message' => 'File tidak ditemukan.',
+            ], 404);
+        }
+
+        // Tentukan path file PDF
+        $filePath = public_path('uploads/main/arsip/' . $file->hasil_pdf);
+
+        // Cek apakah file ada
+        if (!file_exists($filePath)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'File tidak ditemukan di server.',
+            ], 404);
+        }
+
+        // Kembalikan file untuk diunduh
+        return response()->download($filePath, $file->hasil_pdf, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+
+
+
 
     /**
      * Show the form for creating a new resource.

@@ -45,7 +45,7 @@
                                         <input type="checkbox" class="form-check-input" id="checkAll" value="0" onchange="checkedAll('#form_query', table, this.value)" />
                                     </div>
                                 </th>
-                                    <th class="w-80px mw-80px min-w-80px">#</th>
+                                    <th class="w-130px mw-130px min-w-130px">#</th>
                                 <th class="text-start w-40px mw-40px min-w-40px">No</th>
                                     <th class="text-start">Nomor Arsip</th>
                                     <th class="text-start">Referensi Nomor Arsip</th>

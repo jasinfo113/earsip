@@ -75,7 +75,13 @@ function dataArchives() {
 }
 
 
+function downloadFile(id) {
+    // Gantilah ':id' dengan ID dokumen
+    const url = "/main/archives/export/" + id; // URL statis
 
+    // Arahkan browser ke URL untuk mengunduh
+    window.location.href = url;
+}
 function exportData() {
     dialogOpenTab("Export data login pegawai?", "admin/pegawai/export", $("#form_pegawai").serialize());
 }

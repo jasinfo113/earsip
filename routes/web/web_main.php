@@ -16,6 +16,9 @@ Route::middleware('valid_access')->group(function () {
             Route::post('/del', [ArchivesController::class, 'del'])->name('main.archives.del');
             Route::post('/detail', [ArchivesController::class, 'detail'])->name('main.archives.detail');
             Route::post('/pembubuhan', [ArchivesController::class, 'pembubuhan'])->name('main.archives.pembubuhan');
+            Route::post('/save-pdf', [ArchivesController::class, 'savePdfToServer'])->name('savePdfToServer');
+            // Route::get('/download', [ArchivesController::class, 'export'])->name('main.archives.export');
+            Route::get('/export/{id}', [ArchivesController::class, 'export'])->name('main.archives.export');
         });
     });
 });
