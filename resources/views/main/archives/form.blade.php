@@ -88,7 +88,7 @@
                                     class="text-danger">*</span></label>
                             @if (!empty($row->document_files[0]->name))
                                 <div class="mb-2">
-                                    <a href="{{ asset('storage/main/arsip/' . $row->document_files[0]->name) }}"
+                                    <a href="{{ asset('uploads/main/arsip/' . $row->document_files[0]->name) }}"
                                         target="_blank" class="text-primary">
                                         Lihat File
                                     </a>
