@@ -571,6 +571,10 @@ function openForm(_url, _params = "") {
                     setTimeout(() => {
                         console.log("tes");
                         $("#form_dialog_detail").modal("show");
+                        if (typeof loadPDF === "function") {
+                            console.log("PDF URL:");
+                            loadPDF();
+                        }
                     }, 100);
                 } else {
                     $("#form_dialog").html(data);
