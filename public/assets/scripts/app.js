@@ -569,6 +569,7 @@ function openForm(_url, _params = "") {
                 if ($("body").hasClass("modal-open")) {
                     $("#form_dialog_detail").html(data);
                     setTimeout(() => {
+                        console.log("tes");
                         $("#form_dialog_detail").modal("show");
                     }, 100);
                 } else {
