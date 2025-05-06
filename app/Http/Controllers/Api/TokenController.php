@@ -7,6 +7,9 @@ use App\Models\Api\Clients;
 use App\Models\Main\Archives;
 use App\Models\Main\Document_file;
 use App\Models\Main\Document_history;
+use App\Models\Master\Categories;
+use App\Models\Master\location;
+use App\Models\Master\Tags;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -85,7 +88,6 @@ class TokenController extends Controller
             $pdfFile = $request->file('file');
             $namaFilePdf = $pdfFile->hashName();
             $pdfFile->storeAs('public/main/arsip', $namaFilePdf);
-            // $fullUrl = asset('uploads/main/arsip/' . $namaFilePdf); // Optional
         }
 
         // Simpan metadata file
@@ -113,5 +115,21 @@ class TokenController extends Controller
             'message' => 'Arsip berhasil disimpan',
             'code' => $code,
         ], 201);
+    }
+
+    public function getFormOptions(Request $request)
+    {
+        $user = $request->user();
+
+        $categories = Categories::select('id', 'name')->get();
+        $tags = Tags::select('id', 'name')->get();
+        $locations = location::select('id', 'name')->get();
+
+        return response()->json([
+            'success' => true,
+            'categories' => $categories,
+            'tags' => $tags,
+            'locations' => $locations,
+        ]);
     }
 }
