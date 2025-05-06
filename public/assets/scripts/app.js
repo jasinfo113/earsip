@@ -569,10 +569,8 @@ function openForm(_url, _params = "") {
                 if ($("body").hasClass("modal-open")) {
                     $("#form_dialog_detail").html(data);
                     setTimeout(() => {
-                        console.log("tes");
                         $("#form_dialog_detail").modal("show");
                         if (typeof loadPDF === "function") {
-                            console.log("PDF URL:");
                             loadPDF();
                         }
                     }, 100);
@@ -581,7 +579,6 @@ function openForm(_url, _params = "") {
                     setTimeout(() => {
                         $("#form_dialog").modal("show");
                         if (typeof loadPDF === "function") {
-                            console.log("PDF URL:");
                             loadPDF();
                         }
                     }, 100);
