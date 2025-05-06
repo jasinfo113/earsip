@@ -19,7 +19,7 @@
                 <div id="qr-code-wrapper" data-code="{{ $code }}" data-x="10" data-y="10"
                     style="position: absolute; top: 10px; left: 10px; width: 100px; height: 100px; background: transparent;">
                 </div>
-                <input type="text" name="update" id="namafile" value="{{ $nama_file }}" />
+                <input type="hidden" name="update" id="namafile" value="{{ $nama_file }}" />
                 <input type="hidden" name="id" value="{{ $code }}" />
                 <input type="hidden" name="document_id" value="{{ $document_id }}" />
                 <div class="modal-footer flex-end gap-2">
