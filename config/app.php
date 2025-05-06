@@ -145,5 +145,30 @@ return [
         'bg_bottom' => env('URL_ASSET_CENTRAL') . 'placeholder/bg-bottom.png',
         'pdf' => env('URL_ASSET_CENTRAL') . 'placeholder/pdf.png',
     ],
+    // 'providers' => [
+
+    //     /*
+    //      * Laravel Framework Service Providers...
+    //      */
+    //     Illuminate\Auth\AuthServiceProvider::class,
+    //     Illuminate\Broadcasting\BroadcastServiceProvider::class,
+    //     Illuminate\Bus\BusServiceProvider::class,
+    //     Illuminate\Cache\CacheServiceProvider::class,
+    //     Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
+    //     Illuminate\Routing\RoutingServiceProvider::class,
+    //     Illuminate\Filesystem\FilesystemServiceProvider::class,
+
+    //     /*
+    //      * Application Service Providers...
+    //      */
+    //     App\Providers\AppServiceProvider::class,
+    //     App\Providers\RouteServiceProvider::class,
+
+    //     // Tambahkan ServiceProvider kustom Anda di sini
+    //     // Misalnya:
+    //     // App\Providers\YourServiceProvider::class,
+
+    // ],
+
 
 ];

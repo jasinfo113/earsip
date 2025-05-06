@@ -119,7 +119,7 @@ class LocationController extends Controller
             }
             return response()->json([
                 'status' => TRUE,
-                'message' => __(($request->id ? 'response.data_updated' : 'response.data_added')),
+                'message' => __(($request->id ? 'Data Berhasil Diubah' : 'Data Berhasil Ditambahkan')),
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -140,7 +140,7 @@ class LocationController extends Controller
             if (!$request->id) {
                 return response()->json([
                     'status' => FALSE,
-                    'message' => __('response.no_process'),
+                    'message' => __('no_process'),
                 ]);
             }
             $query = location::whereIn('id', explode(",", $request->id));
@@ -153,7 +153,7 @@ class LocationController extends Controller
                 if ($row->id == $user_id) {
                     return response()->json([
                         'status' => FALSE,
-                        'message' => __('response.failed_request'),
+                        'message' => __('failed_request'),
                     ]);
                 }
             }
@@ -165,7 +165,7 @@ class LocationController extends Controller
             ]);
             return response()->json([
                 'status' => TRUE,
-                'message' => __('response.data_deleted'),
+                'message' => __('Data Berhasil Dihapus'),
             ]);
         } catch (\Exception $e) {
             return response()->json([

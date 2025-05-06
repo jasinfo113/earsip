@@ -57,7 +57,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => TRUE,
-                'message' => __('response.login_success'),
+                'message' => __('Selamat Datang ') . $user->name,
                 'url' => route('dashboard')
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {

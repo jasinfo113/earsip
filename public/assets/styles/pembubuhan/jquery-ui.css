@@ -1063,12 +1063,14 @@ a.ui-button:active,
 	height: 16px;
 }
 .ui-icon,
-.ui-widget-content .ui-icon {
+/* .ui-widget-content .ui-icon {
 	background-image: url("images/ui-icons_444444_256x240.png");
 }
 .ui-widget-header .ui-icon {
 	background-image: url("images/ui-icons_444444_256x240.png");
 }
+
+*/
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-button:hover .ui-icon,
