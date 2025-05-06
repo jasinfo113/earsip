@@ -38,11 +38,6 @@
     </div>
 </form>
 
-{{-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> --}}
-
-
-
 <link rel="stylesheet" href="{{ asset('assets/styles/pembubuhan/jquery-ui.css?v=' . time()) }}" type="text/css" />
 <script src="{{ asset('assets/scripts/pembubuhan/jquery-ui.min.js?v=' . time()) }}"></script>
 <script src="{{ asset('assets/scripts/pembubuhan/pdf.min.js?v=' . time()) }}"></script>
@@ -189,78 +184,82 @@
 
 
     function savePDF() {
-        const canvas = document.getElementById('pdf-canvas');
-        const qrCanvas = document.querySelector('#qr-code canvas');
+    const canvas = document.getElementById('pdf-canvas');
+    const qrCanvas = document.querySelector('#qr-code canvas');
+    const qrWrapper = document.getElementById('qr-code');
 
-        const pdf = new jspdf.jsPDF({
-            orientation: 'portrait',
-            unit: 'px',
-            format: [canvas.width, canvas.height]
-        });
+    const pdf = new jspdf.jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+    });
 
-        const ctx = canvas.getContext('2d');
-        const canvasWithQR = document.createElement('canvas');
-        canvasWithQR.width = canvas.width;
-        canvasWithQR.height = canvas.height;
-        const ctxWithQR = canvasWithQR.getContext('2d');
+    const ctx = canvas.getContext('2d');
+    const canvasWithQR = document.createElement('canvas');
+    canvasWithQR.width = canvas.width;
+    canvasWithQR.height = canvas.height;
+    const ctxWithQR = canvasWithQR.getContext('2d');
 
-        // Copy isi canvas PDF ke canvas baru
-        ctxWithQR.drawImage(canvas, 0, 0);
+    // Gambar isi PDF asli
+    ctxWithQR.drawImage(canvas, 0, 0);
 
-        // Tempelkan QR Code ke posisi sesuai draggable
-        const qrX = parseInt($('#qr-code').attr('data-x')) || 10;
-        const qrY = parseInt($('#qr-code').attr('data-y')) || 10;
-        ctxWithQR.drawImage(qrCanvas, qrX, qrY, qrCanvas.width, qrCanvas.height);
+    // Ambil posisi dan ukuran QR Code
+    const qrX = parseInt(qrWrapper.getAttribute('data-x')) || 10;
+    const qrY = parseInt(qrWrapper.getAttribute('data-y')) || 10;
+    const qrWidth = qrWrapper.offsetWidth;
+    const qrHeight = qrWrapper.offsetHeight;
 
-        // Convert ke image
-        const finalImage = canvasWithQR.toDataURL('image/jpeg', 1.0);
+    // Gambar QR Code dengan ukuran yang benar
+    ctxWithQR.drawImage(qrCanvas, qrX, qrY, qrWidth, qrHeight);
 
-        // Masukkan ke PDF
-        pdf.addImage(finalImage, 'JPEG', 0, 0, canvas.width, canvas.height);
+    // Convert ke image
+    const finalImage = canvasWithQR.toDataURL('image/jpeg', 1.0);
 
-        // Generate Blob
-        const blob = pdf.output('blob');
+    // Masukkan ke PDF
+    pdf.addImage(finalImage, 'JPEG', 0, 0, canvas.width, canvas.height);
 
-        // Kirim ke server pakai AJAX
-        const formData = new FormData();
-        formData.append('file', blob, 'output.pdf');
-        formData.append('_token', '{{ csrf_token() }}');
-        formData.append('id', '{{ $code }}');
-        formData.append('document_id', '{{ $document_id }}');
-        $.ajax({
-            url: '{{ route('savePdfToServer') }}',
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                Swal.fire({
-                    icon: "success",
-                    html: response.message,
-                    confirmButtonText: "OK",
-                    customClass: {
-                        confirmButton: "btn btn-primary",
-                    },
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        closeModal();
-                        $('#table_data').DataTable().ajax.reload();
-                    }
-                });
-            },
-            error: function(xhr, status, error) {
-                Swal.fire({
-                    icon: "error",
-                    html: xhr.responseJSON?.message || "Terjadi kesalahan",
-                    confirmButtonText: "OK",
-                    customClass: {
-                        confirmButton: "btn btn-primary",
-                    },
-                });
-            }
+    // Kirim ke server
+    const blob = pdf.output('blob');
+    const formData = new FormData();
+    formData.append('file', blob, 'output.pdf');
+    formData.append('_token', '{{ csrf_token() }}');
+    formData.append('id', '{{ $code }}');
+    formData.append('document_id', '{{ $document_id }}');
 
-        });
-    }
+    $.ajax({
+        url: '{{ route('savePdfToServer') }}',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            Swal.fire({
+                icon: "success",
+                html: response.message,
+                confirmButtonText: "OK",
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    closeModal();
+                    $('#table_data').DataTable().ajax.reload();
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                icon: "error",
+                html: xhr.responseJSON?.message || "Terjadi kesalahan",
+                confirmButtonText: "OK",
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                },
+            });
+        }
+    });
+}
+
 
 
     $('#form_data').on('submit', function(e) {

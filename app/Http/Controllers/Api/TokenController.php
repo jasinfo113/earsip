@@ -87,7 +87,7 @@ class TokenController extends Controller
         if ($request->hasFile('file')) {
             $pdfFile = $request->file('file');
             $namaFilePdf = $pdfFile->hashName();
-            $pdfFile->storeAs('public/main/arsip', $namaFilePdf);
+            $pdfFile->storeAs('main/arsip', $namaFilePdf);
         }
 
         // Simpan metadata file
