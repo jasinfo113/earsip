@@ -576,10 +576,10 @@ function openForm(_url, _params = "") {
                     setTimeout(() => {
                         $("#form_dialog").modal("show");
                         if (typeof loadPDF === "function") {
-                            console.log("tesxx");
+                            console.log("PDF URL:", json.data.nama_file);
                             loadPDF();
                         }
-                    }, 200);
+                    }, 1000);
                 }
             },
             complete: function () {
