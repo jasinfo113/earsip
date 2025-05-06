@@ -344,7 +344,6 @@ class ArchivesController extends Controller
     public function savePdfToServer(Request $request)
     {
         if ($request->hasFile('file')) {
-            dd($request->all());
             $file = $request->file('file');
             $code = $request->input('id');
             $document_id = $request->input('document_id');

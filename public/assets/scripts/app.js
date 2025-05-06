@@ -1536,6 +1536,7 @@ function submitDataarsip(
                                 openForm("main/archives/pembubuhan", {
                                     nama_file: json.data.nama_file,
                                     code: json.data.code,
+                                    document_id: json.data.document_id,
                                     _token: $('meta[name="csrf-token"]').attr(
                                         "content"
                                     ),
