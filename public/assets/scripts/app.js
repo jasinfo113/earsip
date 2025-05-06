@@ -568,21 +568,18 @@ function openForm(_url, _params = "") {
                 docBlur();
                 if ($("body").hasClass("modal-open")) {
                     $("#form_dialog_detail").html(data);
-                    // $("#form_dialog_detail").modal("show");
                     setTimeout(() => {
                         $("#form_dialog_detail").modal("show");
-                        // console.log('tes');
                     }, 100);
                 } else {
                     $("#form_dialog").html(data);
-                    //$("#form_dialog").modal("show");
                     setTimeout(() => {
                         $("#form_dialog").modal("show");
                         if (typeof loadPDF === "function") {
+                            console.log("tesxx");
                             loadPDF();
-                            // generateQRCode();
                         }
-                    }, 100);
+                    }, 200);
                 }
             },
             complete: function () {
@@ -1539,7 +1536,7 @@ function submitDataarsip(
                                     code: json.data.code,
                                     _token: $('meta[name="csrf-token"]').attr(
                                         "content"
-                                    ), 
+                                    ),
                                 });
                             }
                         }
