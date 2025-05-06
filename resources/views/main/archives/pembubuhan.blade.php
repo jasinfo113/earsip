@@ -14,14 +14,11 @@
             <div class="modal-body m-4" id="pdf-container">
                 <canvas id="pdf-canvas"></canvas>
                 <div id="qr-code" data-x="10" data-y="10"
-     style="position: absolute; top: 10px; left: 10px; width: 100px; height: 100px;"></div>
+                    style="position: absolute; top: 10px; left: 10px; width: 100px; height: 100px;"></div>
 
-<div id="qr-code-wrapper"
-     data-code="{{ $code }}"
-     data-x="10"
-     data-y="10"
-     style="position: absolute; top: 10px; left: 10px; width: 100px; height: 100px; background: transparent;">
-</div>
+                <div id="qr-code-wrapper" data-code="{{ $code }}" data-x="10" data-y="10"
+                    style="position: absolute; top: 10px; left: 10px; width: 100px; height: 100px; background: transparent;">
+                </div>
                 <input type="hidden" name="update" id="namafile" value="{{ $nama_file }}" />
                 <input type="hidden" name="id" value="{{ $code }}" />
                 <input type="hidden" name="document_id" value="{{ $document_id }}" />
@@ -46,27 +43,24 @@
 
 <style>
     #pdf-container {
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-}
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+    }
 
-#pdf-canvas {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-
-#qr-code canvas {
-    width: 100% !important;
-    height: 100% !important;
-    background: transparent;
-}
+    #pdf-canvas {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
 
 
-
+    #qr-code canvas {
+        width: 100% !important;
+        height: 100% !important;
+        background: transparent;
+    }
 </style>
 
 <script>
@@ -103,162 +97,131 @@
         });
     }
 
-    // function generateQRCode() {
-    //     let qrContainer = $('#qr-code');
-    //     qrContainer.html('');
-
-    //     qrCode = new QRCode(qrContainer[0], {
-    //         text: "{{ $code }}",
-    //         width: 90,
-    //         height: 90,
-    //         correctLevel: QRCode.CorrectLevel.H
-    //     });
-
-    //     setTimeout(() => {
-    //         qrContainer.find('canvas').css('background', 'transparent');
-    //         qrContainer.draggable({
-    //             containment: '#pdf-container',
-    //             stop: function(event, ui) {
-    //                 // Simpan posisi terakhir ke atribut data
-    //                 $(this).attr('data-x', ui.position.left);
-    //                 $(this).attr('data-y', ui.position.top);
-    //             }
-    //         });
-    //     }, 100); // kasih jeda supaya canvas sudah siap
-    // }
-
     function generateQRCode() {
-    const wrapper = $('#qr-code-wrapper');
-    const code = wrapper.data('code') || "{{ $code }}";
-    wrapper.html('');
+        const wrapper = $('#qr-code-wrapper');
+        const code = wrapper.data('code') || "{{ $code }}";
+        wrapper.html('');
 
-    // Buat inner div tempat canvas QR Code
-    const inner = $('<div id="qr-inner" style="width: 100%; height: 100%;"></div>');
-    wrapper.append(inner);
+        // Buat inner div tempat canvas QR Code
+        const inner = $('<div id="qr-inner" style="width: 100%; height: 100%;"></div>');
+        wrapper.append(inner);
 
-    // Fungsi untuk membuat QR Code sesuai ukuran
-    function renderQRCode(width) {
-        inner.html(''); // Hapus QR lama
-        new QRCode(inner[0], {
-            text: code,
-            width: width,
-            height: width,
-            correctLevel: QRCode.CorrectLevel.H
-        });
+        // Fungsi untuk membuat QR Code sesuai ukuran
+        function renderQRCode(width) {
+            inner.html(''); // Hapus QR lama
+            new QRCode(inner[0], {
+                text: code,
+                width: width,
+                height: width,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Render awal
+        const initialWidth = wrapper.width();
+        renderQRCode(initialWidth);
+
+        // Delay agar canvas siap
+        setTimeout(() => {
+            wrapper.draggable({
+                containment: '#pdf-container',
+                stop: function(event, ui) {
+                    wrapper.attr('data-x', ui.position.left);
+                    wrapper.attr('data-y', ui.position.top);
+                }
+            });
+
+            wrapper.resizable({
+                aspectRatio: 1,
+                containment: '#pdf-container',
+                handles: 'n, e, s, w, ne, se, sw, nw',
+                resize: function(event, ui) {
+                    const newSize = ui.size.width;
+                    renderQRCode(newSize); // regenerate QR dengan ukuran baru
+                }
+            });
+        }, 100);
     }
-
-    // Render awal
-    const initialWidth = wrapper.width();
-    renderQRCode(initialWidth);
-
-    // Delay agar canvas siap
-    setTimeout(() => {
-        wrapper.draggable({
-            containment: '#pdf-container',
-            stop: function (event, ui) {
-                wrapper.attr('data-x', ui.position.left);
-                wrapper.attr('data-y', ui.position.top);
-            }
-        });
-
-        wrapper.resizable({
-            aspectRatio: 1,
-            containment: '#pdf-container',
-            handles: 'n, e, s, w, ne, se, sw, nw',
-            resize: function (event, ui) {
-                const newSize = ui.size.width;
-                renderQRCode(newSize); // regenerate QR dengan ukuran baru
-            }
-        });
-    }, 100);
-}
-
-
-
-
-
-
-
-
 
 
 
     function savePDF() {
-    const canvas = document.getElementById('pdf-canvas');
-    const qrCanvas = document.querySelector('#qr-code canvas');
-    const qrWrapper = document.getElementById('qr-code');
+        const canvas = document.getElementById('pdf-canvas');
 
-    const pdf = new jspdf.jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
-    });
+        const qrCanvas = document.querySelector('#qr-code-wrapper canvas');
+        const qrWrapper = document.getElementById('qr-code-wrapper');
 
-    const ctx = canvas.getContext('2d');
-    const canvasWithQR = document.createElement('canvas');
-    canvasWithQR.width = canvas.width;
-    canvasWithQR.height = canvas.height;
-    const ctxWithQR = canvasWithQR.getContext('2d');
+        const pdf = new jspdf.jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
 
-    // Gambar isi PDF asli
-    ctxWithQR.drawImage(canvas, 0, 0);
+        const ctx = canvas.getContext('2d');
+        const canvasWithQR = document.createElement('canvas');
+        canvasWithQR.width = canvas.width;
+        canvasWithQR.height = canvas.height;
+        const ctxWithQR = canvasWithQR.getContext('2d');
 
-    // Ambil posisi dan ukuran QR Code
-    const qrX = parseInt(qrWrapper.getAttribute('data-x')) || 10;
-    const qrY = parseInt(qrWrapper.getAttribute('data-y')) || 10;
-    const qrWidth = qrWrapper.offsetWidth;
-    const qrHeight = qrWrapper.offsetHeight;
+        // Gambar isi PDF asli
+        ctxWithQR.drawImage(canvas, 0, 0);
 
-    // Gambar QR Code dengan ukuran yang benar
-    ctxWithQR.drawImage(qrCanvas, qrX, qrY, qrWidth, qrHeight);
+        // Ambil posisi dan ukuran QR Code
+        const qrX = parseInt(qrWrapper.getAttribute('data-x')) || 10;
+        const qrY = parseInt(qrWrapper.getAttribute('data-y')) || 10;
+        const qrWidth = qrWrapper.offsetWidth;
+        const qrHeight = qrWrapper.offsetHeight;
 
-    // Convert ke image
-    const finalImage = canvasWithQR.toDataURL('image/jpeg', 1.0);
+        // Gambar QR Code dengan ukuran yang benar
+        ctxWithQR.drawImage(qrCanvas, qrX, qrY, qrWidth, qrHeight);
 
-    // Masukkan ke PDF
-    pdf.addImage(finalImage, 'JPEG', 0, 0, canvas.width, canvas.height);
+        // Convert ke image
+        const finalImage = canvasWithQR.toDataURL('image/jpeg', 1.0);
 
-    // Kirim ke server
-    const blob = pdf.output('blob');
-    const formData = new FormData();
-    formData.append('file', blob, 'output.pdf');
-    formData.append('_token', '{{ csrf_token() }}');
-    formData.append('id', '{{ $code }}');
-    formData.append('document_id', '{{ $document_id }}');
+        // Masukkan ke PDF
+        pdf.addImage(finalImage, 'JPEG', 0, 0, canvas.width, canvas.height);
 
-    $.ajax({
-        url: '{{ route('savePdfToServer') }}',
-        method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            Swal.fire({
-                icon: "success",
-                html: response.message,
-                confirmButtonText: "OK",
-                customClass: {
-                    confirmButton: "btn btn-primary",
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    closeModal();
-                    $('#table_data').DataTable().ajax.reload();
-                }
-            });
-        },
-        error: function(xhr, status, error) {
-            Swal.fire({
-                icon: "error",
-                html: xhr.responseJSON?.message || "Terjadi kesalahan",
-                confirmButtonText: "OK",
-                customClass: {
-                    confirmButton: "btn btn-primary",
-                },
-            });
-        }
-    });
-}
+        // Kirim ke server
+        const blob = pdf.output('blob');
+        const formData = new FormData();
+        formData.append('file', blob, 'output.pdf');
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('id', '{{ $code }}');
+        formData.append('document_id', '{{ $document_id }}');
+
+        $.ajax({
+            url: '{{ route('savePdfToServer') }}',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: "success",
+                    html: response.message,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        closeModal();
+                        $('#table_data').DataTable().ajax.reload();
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: "error",
+                    html: xhr.responseJSON?.message || "Terjadi kesalahan",
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                    },
+                });
+            }
+        });
+    }
 
 
 

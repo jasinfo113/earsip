@@ -107,7 +107,7 @@ class CategoriesController extends Controller
                 $categori->name = _escape($request->string('kategori'));
                 if ($request->hasFile('gambar')) {
                     $gambarBaru = $request->file('gambar')->hashName();
-                    $request->file('gambar')->storeAs('master/categori', $gambarBaru);
+                    $request->file('gambar')->storeAs('master/categori', $gambarBaru, 'uploads');
                     $categori->image = $gambarBaru;
                 }
                 $categori->unit_kerja_ids = implode(',', array_map('htmlspecialchars', $request->input('unit_kerja_ids', [])));
@@ -132,7 +132,7 @@ class CategoriesController extends Controller
                 $data['name'] = _escape($request->string('kategori'));
                 if ($request->hasFile('gambar')) {
                     $gambarBaru = $request->file('gambar')->hashName();
-                    $request->file('gambar')->storeAs('master/categori', $gambarBaru);
+                    $request->file('gambar')->storeAs('master/categori', $gambarBaru, 'uploads');
                     $data['image'] = $gambarBaru;
                 }
                 $data['unit_kerja_ids'] = implode(',', array_map('htmlspecialchars', $request->input('unit_kerja_ids', [])));

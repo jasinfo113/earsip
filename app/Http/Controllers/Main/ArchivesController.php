@@ -141,7 +141,7 @@ class ArchivesController extends Controller
                 if ($request->hasFile('file')) {
                     $pdfFile = $request->file('file');
                     $namaFilePdf = $pdfFile->hashName();
-                    $pdfFile->storeAs('main/arsip', $namaFilePdf);
+                    $pdfFile->storeAs('main/arsip', $namaFilePdf, 'uploads');
 
                     Document_file::create([
                         'document_id'   => $arsip->id,
@@ -206,7 +206,7 @@ class ArchivesController extends Controller
                 if ($request->hasFile('file')) {
                     $pdfFile = $request->file('file');
                     $namaFilePdf = $pdfFile->hashName();
-                    $path = $pdfFile->storeAs('main/arsip', $namaFilePdf);
+                    $pdfFile->storeAs('main/arsip', $namaFilePdf, 'uploads');
                     $fullUrl = asset('uploads/main/arsip/' . $namaFilePdf);
                 }
 
@@ -348,7 +348,7 @@ class ArchivesController extends Controller
             $code = $request->input('id');
             $document_id = $request->input('document_id');
             $filename = 'arsip_' . time() . '.pdf';
-            $path = $file->storeAs('main/arsip', $filename);
+            $file->storeAs('main/arsip', $filename, 'uploads');
             $query = Document_file::where('document_id', $document_id);
             $query->update([
                 'hasil_pdf' => $filename,
