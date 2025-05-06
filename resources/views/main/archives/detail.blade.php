@@ -12,7 +12,7 @@
                 <table class="table m-table">
                     <tr>
                         <td class="left" colspan="3">
-                            <a href="{{ asset('uploads/main/arsip/' . $row->file) }}"
+                            <a href="{{ asset('storage/main/arsip/' . $row->file) }}"
                                         target="_blank" class="text-primary">
                                         <i class="fa fa-file-pdf fa-8x text-danger"></i>
                                     </a>

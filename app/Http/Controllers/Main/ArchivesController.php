@@ -59,7 +59,7 @@ class ArchivesController extends Controller
                 $html = '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'main/archives/detail\',\'id=' . $row->id . '\')" title="Detail"><i class="fa fa-th-list"></i></a>';
 
                 $data = [
-                    'nama_file' => asset('uploads/main/arsip/' . $row->name),
+                    'nama_file' => asset('storage/main/arsip/' . $row->name),
                     'code' => $row->code,
                     'document_id' => $row->id,
                     '_token' => csrf_token(),
@@ -153,7 +153,7 @@ class ArchivesController extends Controller
                     ]);
 
                     $modalStatus = 'modal';
-                    $fullUrl = asset('uploads/main/arsip/' . $namaFilePdf);
+                    $fullUrl = asset('storage/main/arsip/' . $namaFilePdf);
                     $code = $arsip->code;
                     $document_id = $arsip->id;
                 } else {
@@ -207,7 +207,7 @@ class ArchivesController extends Controller
                     $pdfFile = $request->file('file');
                     $namaFilePdf = $pdfFile->hashName();
                     $pdfFile->storeAs('main/arsip', $namaFilePdf, 'uploads');
-                    $fullUrl = asset('uploads/main/arsip/' . $namaFilePdf);
+                    $fullUrl = asset('storage/main/arsip/' . $namaFilePdf);
                 }
 
                 Document_file::create([
@@ -382,7 +382,7 @@ class ArchivesController extends Controller
         }
 
         // Tentukan path file PDF
-        $filePath = public_path('uploads/main/arsip/' . $file->hasil_pdf);
+        $filePath = public_path('storage/main/arsip/' . $file->hasil_pdf);
 
         // Cek apakah file ada
         if (!file_exists($filePath)) {
