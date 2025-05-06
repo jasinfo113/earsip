@@ -1532,7 +1532,6 @@ function submitDataarsip(
                                 location.replace(json.url);
                             }
                             if (json.modal) {
-                                console.log(json.data);
                                 openForm("main/archives/pembubuhan", {
                                     nama_file: json.data.nama_file,
                                     code: json.data.code,
