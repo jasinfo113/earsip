@@ -45,21 +45,21 @@ class TokenController extends Controller
     public function getcodearsip(Request $request)
     {
         // Autentikasi via Sanctum
-        // $user = Auth::guard('sanctum')->user();
-        // if (!$user) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
-        $client_id = $request->header('client_id');
-        $client_secret = $request->header('client_secret');
-
-        // Cek apakah client_id dan client_secret valid
-        $client = Clients::where('client_id', $client_id)
-            ->where('client_secret', $client_secret)
-            ->first();
-
-        if (!$client) {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+        // $client_id = $request->header('client_id');
+        // $client_secret = $request->header('client_secret');
+
+        // // Cek apakah client_id dan client_secret valid
+        // $client = Clients::where('client_id', $client_id)
+        //     ->where('client_secret', $client_secret)
+        //     ->first();
+
+        // if (!$client) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
         // Validasi input
         $request->validate([
             'file'         => 'required|file|mimes:pdf|max:5048',
@@ -149,17 +149,17 @@ class TokenController extends Controller
 
     public function getFormOptions(Request $request)
     {
-        $client_id = $request->header('client_id');
-        $client_secret = $request->header('client_secret');
+        // $client_id = $request->header('client_id');
+        // $client_secret = $request->header('client_secret');
 
-        // Cek apakah client_id dan client_secret valid
-        $client = Clients::where('client_id', $client_id)
-            ->where('client_secret', $client_secret)
-            ->first();
+        // // Cek apakah client_id dan client_secret valid
+        // $client = Clients::where('client_id', $client_id)
+        //     ->where('client_secret', $client_secret)
+        //     ->first();
 
-        if (!$client) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        // if (!$client) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
 
         $categories = Categories::select('id', 'name')->get();
         $tags = Tags::select('id', 'name')->get();
