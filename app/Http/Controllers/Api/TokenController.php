@@ -160,7 +160,7 @@ class TokenController extends Controller
         // if (!$client) {
         //     return response()->json(['error' => 'Unauthorized'], 401);
         // }
-
+        //
         $categories = Categories::select('id', 'name')->get();
         $tags = Tags::select('id', 'name')->get();
         $locations = location::select('id', 'name')->get();
