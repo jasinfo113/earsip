@@ -28,7 +28,7 @@ class TokenController extends Controller
         $client = Clients::where('client_id', $request->client_id)
             ->where('client_secret', $request->client_secret)
             ->first();
-
+       
         if (!$client) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -45,8 +45,24 @@ class TokenController extends Controller
     public function getcodearsip(Request $request)
     {
         // Autentikasi via Sanctum
+<<<<<<< HEAD
+        // $user = Auth::guard('sanctum')->user();
+        // if (!$user) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
+        //dd($request->all());
+        $client_id = $request->header('client_id');
+        $client_secret = $request->header('client_secret');
+
+        // Cek apakah client_id dan client_secret valid
+        $client = Clients::where('client_id', $client_id)
+            ->where('client_secret', $client_secret)
+            ->first();
+        if (!$client) {
+=======
         $user = Auth::guard('sanctum')->user();
         if (!$user) {
+>>>>>>> cb2dd717936d9f5d488e7ae409d797bb07f518c3
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         // $client_id = $request->header('client_id');
