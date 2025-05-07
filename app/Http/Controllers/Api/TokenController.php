@@ -28,7 +28,7 @@ class TokenController extends Controller
         $client = Clients::where('client_id', $request->client_id)
             ->where('client_secret', $request->client_secret)
             ->first();
-
+       
         if (!$client) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
@@ -49,6 +49,7 @@ class TokenController extends Controller
         // if (!$user) {
         //     return response()->json(['error' => 'Unauthorized'], 401);
         // }
+        //dd($request->all());
         $client_id = $request->header('client_id');
         $client_secret = $request->header('client_secret');
 
@@ -56,7 +57,6 @@ class TokenController extends Controller
         $client = Clients::where('client_id', $client_id)
             ->where('client_secret', $client_secret)
             ->first();
-
         if (!$client) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
