@@ -34,11 +34,8 @@ Route::get('/storage-link', function () {
 });
 
 require __DIR__ . '/web/web_auth.php';
-require __DIR__ . '/web/web_general.php';
 require __DIR__ . '/web/web_admin.php';
-require __DIR__ . '/web/web_account.php';
 require __DIR__ . '/web/web_manage.php';
 require __DIR__ . '/web/web_main.php';
-require __DIR__ . '/web/web_cms.php';
-require __DIR__ . '/web/web_apps.php';
 require __DIR__ . '/web/web_master.php';
+require __DIR__ . '/web/web_account.php';

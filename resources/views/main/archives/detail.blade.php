@@ -12,12 +12,23 @@
                 <table class="table m-table">
                     <tr>
                         <td class="left" colspan="3">
-                            <a href="{{ asset('uploads/main/arsip/' . $row->file) }}"
-                                        target="_blank" class="text-primary">
-                                        <i class="fa fa-file-pdf fa-8x text-danger"></i>
+                            <div style="display: flex; gap: 40px; align-items: center;">
+                                <div style="text-align: center;">
+                                    <a href="{{ asset('uploads/main/arsip/' . $row->file) }}" target="_blank">
+                                        <i class="fa fa-file-pdf fa-4x text-danger"></i><br>
+                                        <span>File Asli</span>
                                     </a>
+                                </div>
+                                <div style="text-align: center;">
+                                    <a href="{{ asset('uploads/main/arsip/' . $row->hasil_pdf) }}" target="_blank">
+                                        <i class="fa fa-file-pdf fa-4x text-success"></i><br>
+                                        <span>File Pembubuhan</span>
+                                    </a>
+                                </div>
+                            </div>
                         </td>
                     </tr>
+
                     <tr>
                         <td class="left" width="135px">Nomor Arsip</td>
                         <td width="10px"> : </td>
@@ -34,7 +45,7 @@
                     <tr>
                         <td class="left">Tanggal Arsip</td>
                         <td> : </td>
-                        <th class="left"><?php echo date('d F Y H:i',strtotime($row->date)); ?>
+                        <th class="left"><?php echo date('d F Y H:i', strtotime($row->date)); ?>
                         </th>
                     </tr>
                     <tr>
@@ -106,4 +117,3 @@
         </div>
     </div>
 </div>
-

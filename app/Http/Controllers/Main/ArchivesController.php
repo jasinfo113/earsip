@@ -67,8 +67,10 @@ class ArchivesController extends Controller
 
                 // encode ke JSON, lalu amanin kutipnya
                 $jsonData = htmlspecialchars(json_encode($data), ENT_QUOTES, 'UTF-8');
+                if (!$row->hasil_pdf) {
+                    $html .= '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'main/archives/pembubuhan\', ' . $jsonData . ')" title="Pembubuhan"><i class="fas fa-clone"></i></a>';
+                }
 
-                $html .= '<a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="openForm(\'main/archives/pembubuhan\', ' . $jsonData . ')" title="Pembubuhan"><i class="fas fa-clone"></i></a>';
                 if (config('app.user_access.export', 0) == 1 && $row->hasil_pdf) {
                     $html .= ' <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" href="javascript:void(0)" onclick="downloadFile(' . $row->id . ')" title="Export"><i class="fa fa-download"></i></a>';
                 }
@@ -316,6 +318,7 @@ class ArchivesController extends Controller
             'm_category.name as category_name',
             'm_location.name as location_name',
             'document_file.name as file',
+            'document_file.name as hasil_pdf',
             'document.updated_at as updated_at',
             'document.updated_from as updated_from',
             'document.updated_by as updated_by',

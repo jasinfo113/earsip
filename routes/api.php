@@ -9,6 +9,10 @@ use App\Http\Controllers\Api\TokenController;
 
 
 
+Route::post('/getcodearsip', [TokenController::class, 'getcodearsip']);
+
 Route::post('get-token', [TokenController::class, 'Get_token']);
-Route::middleware('auth:sanctum')->post('/getcodearsip', [TokenController::class, 'getcodearsip']);
-Route::middleware('auth:sanctum')->get('/form-options', [TokenController::class, 'getFormOptions']);
+//Route::post('/getcodearsip', [TokenController::class, 'getcodearsip']);
+// Route::middleware('auth:sanctum')->post('/getcodearsip', [TokenController::class, 'getcodearsip']);
+// Route::middleware('auth:sanctum')->get('/form-options', [TokenController::class, 'getFormOptions']);
+Route::get('/form-options', [TokenController::class, 'getFormOptions']);

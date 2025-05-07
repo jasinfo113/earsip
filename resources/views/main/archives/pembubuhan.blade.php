@@ -61,6 +61,53 @@
         height: 100% !important;
         background: transparent;
     }
+
+.ui-resizable-se {
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+}
+.qr-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    z-index: 100;
+    pointer-events: none; /* Supaya gak ganggu draggable/resizable */
+}
+
+/* Top-left */
+.qr-tl {
+    top: 0;
+    left: 0;
+    border-top: 3px solid #ff0000;
+    border-left: 3px solid #ff0000;
+}
+
+/* Top-right */
+.qr-tr {
+    top: 0;
+    right: 0;
+    border-top: 3px solid #ff0000;
+    border-right: 3px solid #ff0000;
+}
+
+/* Bottom-left */
+.qr-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 3px solid #ff0000;
+    border-left: 3px solid #ff0000;
+}
+
+/* Bottom-right */
+.qr-br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 3px solid #ff0000;
+    border-right: 3px solid #ff0000;
+}
+
+
 </style>
 
 <script>
@@ -134,13 +181,18 @@
             wrapper.resizable({
                 aspectRatio: 1,
                 containment: '#pdf-container',
-                handles: 'n, e, s, w, ne, se, sw, nw',
+                handles: 'n, e, s, w, ne, se, sw, nw', // semua sudut + sisi
                 resize: function(event, ui) {
                     const newSize = ui.size.width;
-                    renderQRCode(newSize); // regenerate QR dengan ukuran baru
+                    renderQRCode(newSize);
                 }
             });
         }, 100);
+        const corners = ['tl', 'tr', 'bl', 'br'];
+corners.forEach(pos => {
+    const corner = $(`<div class="qr-corner qr-${pos}"></div>`);
+    wrapper.append(corner);
+});
     }
 
 
