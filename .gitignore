@@ -26,3 +26,4 @@ yarn-error.log
 /storage/app/public/*
 /storage/oauth-private.key
 /storage/oauth-public.key
+/storage/logs/laravel.log
