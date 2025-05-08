@@ -39,3 +39,4 @@ require __DIR__ . '/web/web_manage.php';
 require __DIR__ . '/web/web_main.php';
 require __DIR__ . '/web/web_master.php';
 require __DIR__ . '/web/web_account.php';
+require __DIR__ . '/web/web_general.php';
